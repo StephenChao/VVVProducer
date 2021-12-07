@@ -419,6 +419,10 @@ class VVVProducer(Module):
 
     # require exact 1 lepton and pt > 55 GeV
     # require 0 lepton now
+
+    # print("nt.run is",event.run)
+
+
     if not ((nLooseEle+nLooseMu)==0): return False
     self.out.fillBranch("lep_pt", lep_pt)
     self.out.fillBranch("lep_eta", lep_eta)
@@ -545,7 +549,7 @@ def Process_1Lepton_GenMatching_Top(self,nt):
                 if ( NTop_daughter == 2):
 		    for itopd in range(0,2):
                         if(abs(nt.GenPart_pdgId[Top_daughter_index[itopd]])==24):
-                            LastCopyWid = Process_1Lepton_GenMatching_LastCopy(Top_daughter_index[itopd]);
+                            LastCopyWid = Process_1Lepton_GenMatching_LastCopy(nt,Top_daughter_index[itopd]);
 
                             self.out.fillBranch("gent_w_pt", nt.GenPart_pt[LastCopyWid]);
                             self.out.fillBranch("gent_w_eta", nt.GenPart_eta[LastCopyWid]);
@@ -556,9 +560,9 @@ def Process_1Lepton_GenMatching_Top(self,nt):
                             NW_daughter = len(Top_W_daughter_index)
                             if ( NW_daughter == 2):
                                 if( abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])<=6 ): gent_w_tag=4
-                                if( abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])==11 or abs(nt.GenPart_pdgId()[Top_W_daughter_index[1]])==12 ): gent_w_tag=1
-                                if( abs(nt.GenPart_pdgId()[Top_W_daughter_index[0]])==12 or abs(nt.GenPart_pdgId()[Top_W_daughter_index[1]])==13 ): gent_w_tag=2
-                                if( abs(nt.GenPart_pdgId()[Top_W_daughter_index[0]])==14 or abs(nt.GenPart_pdgId()[Top_W_daughter_index[1]])==15 ): gent_w_tag=3
+                                if( abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])==11 or abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])==12 ): gent_w_tag=1
+                                if( abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])==13 or abs(nt.GenPart_pdgId[Top_W_daughter_index[1]])==14 ): gent_w_tag=2
+                                if( abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])==15 or abs(nt.GenPart_pdgId[Top_W_daughter_index[1]])==16 ): gent_w_tag=3
 				self.out.fillBranch("gent_w_tag", gent_w_tag);
                                 self.out.fillBranch("gent_w_q1_pt", nt.GenPart_pt[Top_W_daughter_index[0]]);
                                 self.out.fillBranch("gent_w_q1_eta", nt.GenPart_eta[Top_W_daughter_index[0]]);
@@ -577,7 +581,7 @@ def Process_1Lepton_GenMatching_Top(self,nt):
                             self.out.fillBranch("gent_b_phi", nt.GenPart_phi[Top_daughter_index[itopd]]);
                             self.out.fillBranch("gent_b_mass", nt.GenPart_mass[Top_daughter_index[itopd]]);
         if nt.GenPart_pdgId[ik] == -6 :
-                if (not (nt.GenPart_statusFlags()[ik]&(1<<13))): continue; 
+                if (not (nt.GenPart_statusFlags[ik]&(1<<13))): continue; 
 
                 self.out.fillBranch("genantitop_pt", nt.GenPart_pt[ik]);
                 self.out.fillBranch("genantitop_eta", nt.GenPart_eta[ik]);
@@ -599,10 +603,11 @@ def Process_1Lepton_GenMatching_Top(self,nt):
                             Top_W_daughter_index = Process_1Lepton_GenMatching_daughterindex(nt,LastCopyWid);
                             NW_daughter = len(Top_W_daughter_index)
                             if ( NW_daughter == 2):
-                                if( abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])<=6 ): gent_w_tag=4
-                                if( abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])==11 or abs(nt.GenPart_pdgId()[Top_W_daughter_index[1]])==12 ): genantit_w_tag=1
-                                if( abs(nt.GenPart_pdgId()[Top_W_daughter_index[0]])==12 or abs(nt.GenPart_pdgId()[Top_W_daughter_index[1]])==13 ): genantit_w_tag=2
-                                if( abs(nt.GenPart_pdgId()[Top_W_daughter_index[0]])==14 or abs(nt.GenPart_pdgId()[Top_W_daughter_index[1]])==15 ): genantit_w_tag=3
+                                # print("W's daughter 0's pdgId is",nt.GenPart_pdgId[Top_W_daughter_index[0]])
+                                if( abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])<=6 ): genantit_w_tag=4
+                                if( abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])==11 or abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])==12 ): genantit_w_tag=1
+                                if( abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])==13 or abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])==14 ): genantit_w_tag=2
+                                if( abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])==15 or abs(nt.GenPart_pdgId[Top_W_daughter_index[0]])==16 ): genantit_w_tag=3
                                 
 				self.out.fillBranch("genantit_w_tag", genantit_w_tag);
                                 self.out.fillBranch("genantit_w_q1_pt", nt.GenPart_pt[Top_W_daughter_index[0]]);
@@ -803,9 +808,9 @@ def Process_1Lepton_GenMatching_W(self,nt):
                 NW_daughter = len(W_daughter_index)
                 if ( NW_daughter == 2):
                     if( abs(nt.GenPart_pdgId[W_daughter_index[0]])<=6 ):  taggenwl.append(4)
-                    if( abs(nt.GenPart_pdgId[W_daughter_index[0]])==11 or abs(nt.GenPart_pdgId[W_daughter_index[1]])==12 ):taggenwl.append(1)
-                    if( abs(nt.GenPart_pdgId[W_daughter_index[0]])==12 or abs(nt.GenPart_pdgId[W_daughter_index[1]])==13 ):taggenwl.append(2)
-                    if( abs(nt.GenPart_pdgId[W_daughter_index[0]])==14 or abs(nt.GenPart_pdgId[W_daughter_index[1]])==15 ):taggenwl.append(3)
+                    if( abs(nt.GenPart_pdgId[W_daughter_index[0]])==11 or abs(nt.GenPart_pdgId[W_daughter_index[0]])==12 ):taggenwl.append(1)
+                    if( abs(nt.GenPart_pdgId[W_daughter_index[0]])==13 or abs(nt.GenPart_pdgId[W_daughter_index[0]])==14 ):taggenwl.append(2)
+                    if( abs(nt.GenPart_pdgId[W_daughter_index[0]])==15 or abs(nt.GenPart_pdgId[W_daughter_index[0]])==16 ):taggenwl.append(3)
                     genw_q1_pt.append(nt.GenPart_pt[W_daughter_index[0]]);
                     genw_q1_eta.append(nt.GenPart_eta[W_daughter_index[0]]);
                     genw_q1_phi.append(nt.GenPart_phi[W_daughter_index[0]]);
@@ -876,7 +881,7 @@ def Process_1Lepton_GenMatching_Z(self,nt):
 
                 FirstCopy = Process_1Lepton_GenMatching_FirstCopy(nt,ik);
                 ptgenzf.append(nt.GenPart_pt[FirstCopy]);
-                etagenz.append(nt.GenPart_eta[FirstCopy]);
+                etagenzf.append(nt.GenPart_eta[FirstCopy]);
                 phigenzf.append(nt.GenPart_phi[FirstCopy]);
                 massgenzf.append(nt.GenPart_mass[FirstCopy]);
 
@@ -887,7 +892,7 @@ def Process_1Lepton_GenMatching_Z(self,nt):
                     if( abs(nt.GenPart_pdgId[Z_daughter_index[0]])==11 or abs(nt.GenPart_pdgId[Z_daughter_index[1]])==12 ):taggenzl.append(1)
                     if( abs(nt.GenPart_pdgId[Z_daughter_index[0]])==12 or abs(nt.GenPart_pdgId[Z_daughter_index[1]])==13 ):taggenzl.append(2)
                     if( abs(nt.GenPart_pdgId[Z_daughter_index[0]])==14 or abs(nt.GenPart_pdgId[Z_daughter_index[1]])==15 ):taggenzl.append(3)
-                    genz_q1_pt.append(nt.GenPart_pt[Z_daughter_index[0]]);
+                    # genz_q1_pt.append(nt.GenPart_pt[Z_daughter_index[0]]);
     phigenzl.extend(np.zeros(5-len(phigenzl),int))
     etagenzl.extend(np.zeros(5-len(etagenzl),int))
     massgenzl.extend(np.zeros(5-len(massgenzl),int))
@@ -1287,9 +1292,12 @@ def Process_fatJets(self,nt):
         self.out.fillBranch("jetAK8puppi_tau1", nt.FatJet_tau1[usenumber3]);
         self.out.fillBranch("jetAK8puppi_tau2", nt.FatJet_tau2[usenumber3]);
         self.out.fillBranch("jetAK8puppi_tau3", nt.FatJet_tau3[usenumber3]);
-        self.out.fillBranch("jetAK8puppi_tau21", nt.FatJet_tau2[usenumber3]/nt.FatJet_tau1[usenumber3]);
+        # print("tau 1 is ",nt.FatJet_tau1[usenumber3]);
+        # print("tau 2 is ",nt.FatJet_tau2[usenumber3]);
+
+        self.out.fillBranch("jetAK8puppi_tau21", nt.FatJet_tau2[usenumber3]/(nt.FatJet_tau1[usenumber3]+1e-10));
         self.out.fillBranch("jetAK8puppi_tau4", nt.FatJet_tau4[usenumber3]);
-        self.out.fillBranch("jetAK8puppi_tau42", nt.FatJet_tau2[usenumber3]/nt.FatJet_tau1[usenumber3]);
+        self.out.fillBranch("jetAK8puppi_tau42", nt.FatJet_tau4[usenumber3]/(nt.FatJet_tau2[usenumber3]+1e-10));
         self.out.fillBranch("jetAK8puppi_sd", nt.FatJet_msoftdrop[usenumber3]);
         self.out.fillBranch("jetAK8puppi_sd_NoJEC", Process_1Lepton_Fatjet_SoftdropMass_NoJEC(nt,usenumber3));
         self.out.fillBranch("FatJetAK8_particleNetMD_QCD", nt.FatJet_particleNetMD_QCD[usenumber3])
@@ -1330,9 +1338,9 @@ def Process_fatJets(self,nt):
         self.out.fillBranch("jetAK8puppi_tau1_2", nt.FatJet_tau1[usenumber2]);
         self.out.fillBranch("jetAK8puppi_tau2_2", nt.FatJet_tau2[usenumber2]);
         self.out.fillBranch("jetAK8puppi_tau3_2", nt.FatJet_tau3[usenumber2]);
-        self.out.fillBranch("jetAK8puppi_tau21_2", nt.FatJet_tau2[usenumber2]/nt.FatJet_tau1[usenumber2]);
+        self.out.fillBranch("jetAK8puppi_tau21_2", nt.FatJet_tau2[usenumber2]/(nt.FatJet_tau1[usenumber2]+1e-10));
         self.out.fillBranch("jetAK8puppi_tau4_2", nt.FatJet_tau4[usenumber2]);
-        self.out.fillBranch("jetAK8puppi_tau42_2", nt.FatJet_tau2[usenumber2]/nt.FatJet_tau1[usenumber2]);
+        self.out.fillBranch("jetAK8puppi_tau42_2", nt.FatJet_tau4[usenumber2]/(nt.FatJet_tau2[usenumber2]+1e-10));
         self.out.fillBranch("jetAK8puppi_sd_2", nt.FatJet_msoftdrop[usenumber2]);
         self.out.fillBranch("jetAK8puppi_sd_NoJEC_2", Process_1Lepton_Fatjet_SoftdropMass_NoJEC(nt,usenumber2));
         #print("nt.FatJet_particleNetMD_QCD[usenumber2]",nt.FatJet_particleNetMD_QCD[usenumber2], nt.FatJet_particleNet_TvsQCD[usenumber2])
@@ -1374,9 +1382,9 @@ def Process_fatJets(self,nt):
         self.out.fillBranch("jetAK8puppi_tau1_3", nt.FatJet_tau1[usenumber1]);
         self.out.fillBranch("jetAK8puppi_tau2_3", nt.FatJet_tau2[usenumber1]);
         self.out.fillBranch("jetAK8puppi_tau3_3", nt.FatJet_tau3[usenumber1]);
-        self.out.fillBranch("jetAK8puppi_tau21_3", nt.FatJet_tau2[usenumber1]/nt.FatJet_tau1[usenumber1]);
+        self.out.fillBranch("jetAK8puppi_tau21_3", nt.FatJet_tau2[usenumber1]/(nt.FatJet_tau1[usenumber1]+1e-10));
         self.out.fillBranch("jetAK8puppi_tau4_3", nt.FatJet_tau4[usenumber1]);
-        self.out.fillBranch("jetAK8puppi_tau42_3", nt.FatJet_tau2[usenumber1]/nt.FatJet_tau1[usenumber1]);
+        self.out.fillBranch("jetAK8puppi_tau42_3", nt.FatJet_tau4[usenumber1]/(nt.FatJet_tau2[usenumber1]+1e-10));
         self.out.fillBranch("jetAK8puppi_sd_3", nt.FatJet_msoftdrop[usenumber1]);
         self.out.fillBranch("jetAK8puppi_sd_NoJEC_3", Process_1Lepton_Fatjet_SoftdropMass_NoJEC(nt,usenumber1));
         self.out.fillBranch("FatJetAK8_particleNetMD_QCD_3", nt.FatJet_particleNetMD_QCD[usenumber1])
@@ -1426,6 +1434,7 @@ def Process_1Lepton_Jets(self,nt):
 	jet_tmp.SetPtEtaPhiM(nt.Jet_pt[inum],nt.Jet_eta[inum],nt.Jet_phi[inum],nt.Jet_mass[inum])
         # if jet_tmp.DeltaR(glepton)<dR:continue
 	if nt.Jet_pt[inum]>20 and abs(nt.Jet_eta[inum])<5.0 and nt.Jet_jetId[inum]&2>0 and inum<8:
+          if self.is_mc:  
             ak4jet_hf.append(nt.Jet_hadronFlavour[inum])
             ak4jet_pf.append(nt.Jet_partonFlavour[inum])
             ak4jet_pt.append(nt.Jet_pt[inum])
