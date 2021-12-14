@@ -1364,7 +1364,7 @@ def Process_fatJets(self,nt):
         # if jet_tmp.DeltaR(glepton)<dR:continue
         if(nt.FatJet_pt[inum] > pt_larger and abs(nt.FatJet_eta[inum])<2.4 and inum<4 and inum!= usenumber3 and inum!= usenumber2) :
             pt_larger = nt.FatJet_pt[inum]; 
-            usenumber2 = inum; 
+            usenumber1 = inum; 
     if (usenumber1>-1):
         self.out.fillBranch("IDLoose_3", nt.FatJet_jetId[usenumber1]&2);
         self.out.fillBranch("jetAK8puppi_dnnTop_3", nt.FatJet_deepTag_TvsQCD[usenumber1]);
